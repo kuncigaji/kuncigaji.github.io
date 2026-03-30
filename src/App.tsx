@@ -5,10 +5,6 @@ import {
   Download,
   PieChart,
   Smile,
-  Briefcase,
-  Compass,
-  Bell,
-  TrendingUp,
   Heart,
   Lock
 } from 'lucide-react';
@@ -17,10 +13,9 @@ import {
 import logoIcon from './assets/icon.png';
 import heroImage from './assets/hero.png';
 import playIcon from './assets/google-play-icon.svg';
-import imgDashboard from './assets/apps/dashboard.jpg';
 import imgPerformance from './assets/apps/performance.jpg';
 import imgScore from './assets/apps/score.jpg';
-import imgSetting from './assets/apps/setting.jpg';
+import imgFeatures from './assets/features-render.png';
 
 // --- Reusable Fade-In Animation Component ---
 const FadeIn = ({ children, className = "", delay = 0 }: { children: React.ReactNode, className?: string, delay?: number }) => {
@@ -59,7 +54,7 @@ const FadeIn = ({ children, className = "", delay = 0 }: { children: React.React
 const MobileStickyCTA = () => (
   <div className="md:hidden fixed bottom-0 left-0 right-0 p-4 bg-white/90 backdrop-blur-md border-t border-slate-200 z-50 shadow-[0_-10px_20px_rgba(0,0,0,0.03)]">
     <a
-      href="#mulai"
+      href="https://forms.gle/BEBXEmTJKSVLziBMA"
       className="flex w-full items-center justify-center gap-3 py-3 px-6 rounded-full font-bold text-white bg-pink-500 shadow-[0_8px_20px_-6px_rgba(236,72,153,0.5)] active:scale-95 transition-all"
     >
       <img src={playIcon} alt="Play" className="w-5 h-5" />
@@ -75,11 +70,11 @@ const Header = () => (
     <div className="max-w-6xl mx-auto flex justify-between items-center">
       <a href="#" className="flex items-center gap-3 text-2xl font-extrabold tracking-tight text-slate-900 drop-shadow-sm">
         <img src={logoIcon} alt="KunciGaji Logo" className="w-9 h-9 rounded-xl shadow-sm" />
-        KunciGaji
+        KunciGaji <span className='bg-orange-500 text-white inline-block px-2 py-1 rounded-full text-sm'>Closed Testing</span>
       </a>
       <nav className="hidden md:block">
         <a
-          href="#mulai"
+          href="https://forms.gle/BEBXEmTJKSVLziBMA"
           className="inline-flex items-center justify-center gap-2 py-2.5 px-6 rounded-full font-semibold text-white bg-pink-500 hover:bg-pink-600 shadow-[0_4px_14px_rgba(236,72,153,0.4)] hover:-translate-y-0.5 hover:shadow-[0_6px_20px_rgba(236,72,153,0.5)] transition-all"
         >
           <img src={playIcon} alt="Play" className="w-4 h-4" />
@@ -102,7 +97,7 @@ const Hero = () => {
             30 menit pertama setelah gajian menentukan kondisi finansialmu bulan ini.
           </p>
           <a
-            href="#mulai"
+            href="https://forms.gle/BEBXEmTJKSVLziBMA"
             className="inline-flex items-center gap-3 py-4 px-8 rounded-full font-bold text-lg text-white bg-pink-500 hover:bg-pink-600 shadow-[0_8px_20px_-6px_rgba(236,72,153,0.5)] hover:-translate-y-1 hover:shadow-[0_12px_25px_-5px_rgba(236,72,153,0.6)] transition-all"
           >
             <img src={playIcon} alt="Google Play" className="w-6 h-6" />
@@ -212,75 +207,18 @@ const HowItWorks = () => {
 };
 
 const Features = () => {
-  const fts = [
-    { icon: <Briefcase size={28} className="text-pink-500" />, title: "Semua Uang Punya Tujuan", desc: "Tidak ada lagi uang “hilang” tanpa arah." },
-    { icon: <Compass size={28} className="text-pink-500" />, title: "Prioritas Jadi Jelas", desc: "Kamu tahu mana yang harus didahulukan, tanpa mikir berulang." },
-    { icon: <Bell size={28} className="text-pink-500" />, title: "Tidak Pernah Telat Bayar", desc: "Semua sudah diingatkan sebelum jadi masalah." },
-    { icon: <TrendingUp size={28} className="text-pink-500" />, title: "Lihat Perubahan Nyata", desc: "Kamu bisa melihat progres dari bulan ke bulan." },
-  ];
-
   return (
-    <section className="py-32 px-6 bg-white overflow-hidden">
-      <div className="max-w-[85rem] mx-auto grid lg:grid-cols-12 gap-12 lg:gap-16 items-center">
-        {/* Left Column: Text & Features List */}
-        <div className="lg:col-span-5">
-          <FadeIn className="mb-12 text-center lg:text-left">
-            <h2 className="text-3xl md:text-4xl font-extrabold text-slate-900 mb-6 tracking-tight leading-tight drop-shadow-sm">
-              Sistem yang Menjaga Uangmu Tetap Terkontrol
-            </h2>
-            <p className="text-lg text-slate-500">
-              Dari gajian sampai akhir bulan, semuanya sudah punya arah.
-            </p>
-          </FadeIn>
-
-          <div className="grid sm:grid-cols-2 lg:grid-cols-1 gap-6">
-            {fts.map((f, i) => (
-              <FadeIn key={i} delay={i * 100}>
-                <div className="flex gap-6 p-6 md:p-8 bg-slate-50 hover:bg-pink-50/50 rounded-[28px] transition-colors duration-300 items-start border border-slate-100/50 hover:border-pink-100 group">
-                  <div className="bg-white p-3 rounded-2xl shadow-sm group-hover:scale-110 transition-transform duration-300 text-pink-500 flex-shrink-0">
-                    {f.icon}
-                  </div>
-                  <div>
-                    <h4 className="text-xl font-bold text-slate-900 mb-2">{f.title}</h4>
-                    <p className="text-slate-500">{f.desc}</p>
-                  </div>
-                </div>
-              </FadeIn>
-            ))}
+    <section className="py-24 px-6 bg-white overflow-hidden">
+      <div className="max-w-[1024px] mx-auto flex flex-col items-center">
+        <FadeIn delay={100} className="w-full text-center">
+          <div className="w-full relative shadow-[0_20px_50px_rgba(0,0,0,0.1)] rounded-[2.5rem] overflow-hidden border border-slate-200" style={{ aspectRatio: '1024 / 500' }}>
+            <img
+              src={imgFeatures}
+              alt="Sistem yang Menjaga Uangmu Tetap Terkontrol"
+              className="w-full h-full object-cover object-center bg-white"
+            />
           </div>
-        </div>
-
-        {/* Right Column: App Screenshots Composition (3-Finger Fan) */}
-        <div className="lg:col-span-7 relative h-[650px] hidden lg:block perspective-1000">
-          <div className="absolute inset-0 bg-pink-100/40 rounded-full blur-[120px] opacity-70"></div>
-
-          {/* Left Finger */}
-          <FadeIn delay={100} className="absolute left-2 xl:left-8 top-20 z-10 w-64 -rotate-12 hover:z-40 hover:-translate-y-6 hover:-rotate-3 transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)]">
-            <img
-              src={imgPerformance}
-              alt="Performance KunciGaji"
-              className="rounded-[2.5rem] border-[8px] border-white shadow-[0_20px_50px_rgba(0,0,0,0.15)] w-full block bg-white opacity-95 hover:opacity-100"
-            />
-          </FadeIn>
-
-          {/* Right Finger */}
-          <FadeIn delay={400} className="absolute right-2 xl:right-8 top-20 z-20 w-64 rotate-12 hover:z-40 hover:-translate-y-6 hover:rotate-3 transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)]">
-            <img
-              src={imgSetting}
-              alt="Settings KunciGaji"
-              className="rounded-[2.5rem] border-[8px] border-white shadow-[0_20px_50px_rgba(0,0,0,0.15)] w-full block bg-white opacity-95 hover:opacity-100"
-            />
-          </FadeIn>
-
-          {/* Center Finger (Highest) */}
-          <FadeIn delay={200} className="absolute left-1/2 -translate-x-1/2 top-0 z-30 w-64 hover:-translate-y-6 transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)]">
-            <img
-              src={imgDashboard}
-              alt="Dashboard KunciGaji"
-              className="rounded-[2.5rem] border-[8px] border-white shadow-[0_30px_60px_rgba(0,0,0,0.2)] w-full block bg-white"
-            />
-          </FadeIn>
-        </div>
+        </FadeIn>
       </div>
     </section>
   );
