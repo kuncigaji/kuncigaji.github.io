@@ -72,7 +72,7 @@ const MobileStickyCTA = () => (
 // --- Sections ---
 
 const Header = () => (
-  <header className="absolute top-0 w-full py-6 z-10 px-6">
+  <header className="absolute top-24 md:top-12 w-full py-6 z-10 px-6">
     <div className="max-w-6xl mx-auto flex justify-between items-center">
       <a href="#" className="flex items-center gap-3 text-2xl font-extrabold tracking-tight text-slate-900 drop-shadow-sm">
         <img src={logoIcon} alt="KunciGaji Logo" className="w-9 h-9 rounded-xl shadow-sm" />
@@ -371,7 +371,7 @@ const FinalCta = () => (
           Ubah kondisimu mulai hari ini. Bangun sistem otomatis yang menenangkan pikiran.
         </p>
         <a
-          href="#"
+          href="https://forms.gle/BEBXEmTJKSVLziBMA"
           className="flex items-center justify-center gap-3 w-full max-w-md mx-auto py-5 px-8 rounded-full font-bold text-xl md:text-2xl text-white bg-pink-500 hover:bg-pink-600 shadow-[0_8px_25px_-4px_rgba(236,72,153,0.5)] hover:-translate-y-1.5 hover:shadow-[0_15px_30px_-5px_rgba(236,72,153,0.6)] transition-all active:scale-95"
         >
           <img src={playIcon} alt="Play" className="w-6 h-6 opacity-90" />
@@ -385,7 +385,7 @@ const FinalCta = () => (
 const Footer = () => (
   <footer className="bg-slate-50 py-16 text-center border-t border-slate-200 pb-28 md:pb-16">
     <div className="max-w-4xl mx-auto px-6">
-      <a href="#" className="flex justify-center items-center gap-2 text-xl font-bold tracking-tight text-slate-900 mb-8 opacity-60 hover:opacity-100 transition-opacity">
+      <a href="https://forms.gle/BEBXEmTJKSVLziBMA" className="flex justify-center items-center gap-2 text-xl font-bold tracking-tight text-slate-900 mb-8 opacity-60 hover:opacity-100 transition-opacity">
         <img src={logoIcon} alt="KunciGaji Logo" className="w-12 h-12 grayscale opacity-80" />
         KunciGaji
       </a>
@@ -453,7 +453,11 @@ function App() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-50 font-sans selection:bg-pink-500 selection:text-white">
+    <div className="relative min-h-screen bg-slate-50 font-sans selection:bg-pink-500 selection:text-white">
+      <div className='text-center sticky top-0 z-[99999] bg-orange-500 py-4'>
+        <p className='text-white'>Bantu KunciGaji menjadi lebih baik dengan mengikuti Closed Testing di Google Play Store. <a href="https://forms.gle/BEBXEmTJKSVLziBMA" className='text-white underline'>Menjadi Penguji</a></p>
+
+      </div>
       <Header />
       <main>
         <Hero />
