@@ -423,10 +423,12 @@ const PrivacyPolicyPage = () => {
             Kebijakan Privasi
           </h1>
           <div className="space-y-6 text-lg text-slate-600 leading-relaxed">
-            <p>Aplikasi ini tidak mengumpulkan, menyimpan, atau membagikan data pribadi pengguna ke server mana pun.</p>
-            <p>Seluruh data finansial yang dimasukkan pengguna disimpan secara lokal di perangkat pengguna menggunakan penyimpanan internal aplikasi.</p>
-            <p>Aplikasi ini tidak menggunakan akun, tidak melakukan pelacakan, dan tidak mengirim data ke pihak ketiga.</p>
-            <p>Jika pengguna memilih untuk menghapus data melalui fitur Reset Data, seluruh data akan dihapus dari perangkat.</p>
+            <p>Aplikasi ini mengutamakan privasi pengguna.</p>
+            <p>Data finansial yang dimasukkan pengguna disimpan secara lokal di perangkat menggunakan penyimpanan internal aplikasi, dan tidak dikirim ke server mana pun.</p>
+            <p>Untuk fitur tertentu, seperti login dan sinkronisasi akun, aplikasi menggunakan layanan pihak ketiga (Supabase Authentication dengan Google OAuth). Proses ini dapat melibatkan data dasar seperti alamat email dan identitas pengguna yang dikelola secara aman oleh penyedia layanan tersebut.</p>
+            <p>Untuk fitur berlangganan (subscription), aplikasi menggunakan Google Play Billing. Proses transaksi dikelola langsung oleh Google dan dapat melibatkan akun Google pengguna. Aplikasi tidak memiliki akses ke informasi sensitif seperti kata sandi atau detail pembayaran.</p>
+            <p>Aplikasi tidak melakukan pelacakan (tracking) atau menjual data pengguna ke pihak ketiga.</p>
+            <p>Jika pengguna menghapus data melalui fitur Reset Data atau menghapus akun (jika tersedia), data finansial akan dihapus dari perangkat dan data akun yang tersimpan di layanan akan mengikuti kebijakan penyedia layanan terkait.</p>
             <p className="pt-6 font-bold text-slate-900">Tanggal berlaku: Agustus 2026</p>
           </div>
         </section>
