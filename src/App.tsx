@@ -1,15 +1,15 @@
 import {
-    AlertCircle,
-    ArrowRight,
-    Bell,
-    Briefcase,
-    Compass,
-    Download,
-    Heart,
-    Lock,
-    PieChart,
-    Smile,
-    TrendingUp
+  AlertCircle,
+  ArrowRight,
+  Bell,
+  Briefcase,
+  Compass,
+  Download,
+  Heart,
+  Lock,
+  PieChart,
+  Smile,
+  TrendingUp
 } from 'lucide-react';
 import React, { useEffect, useRef, useState } from 'react';
 
@@ -60,7 +60,7 @@ const FadeIn = ({ children, className = "", delay = 0 }: { children: React.React
 const MobileStickyCTA = () => (
   <div className="md:hidden fixed bottom-0 left-0 right-0 p-4 bg-white/90 backdrop-blur-md border-t border-slate-200 z-50 shadow-[0_-10px_20px_rgba(0,0,0,0.03)]">
     <a
-      href="https://groups.google.com/g/kuncigaji-testers"
+      href="https://play.google.com/store/apps/details?id=com.dennisthandy.kuncigaji"
       className="flex w-full items-center justify-center gap-3 py-3 px-6 rounded-full font-bold text-white bg-pink-500 shadow-[0_8px_20px_-6px_rgba(236,72,153,0.5)] active:scale-95 transition-all"
     >
       <img src={playIcon} alt="Play" className="w-5 h-5" />
@@ -72,15 +72,15 @@ const MobileStickyCTA = () => (
 // --- Sections ---
 
 const Header = () => (
-  <header className="absolute top-24 md:top-12 w-full py-6 z-10 px-6">
+  <header className="md:fixed bg-white w-full py-6 z-50 px-6">
     <div className="max-w-6xl mx-auto flex justify-between items-center">
       <a href="#" className="flex items-center gap-3 text-2xl font-extrabold tracking-tight text-slate-900 drop-shadow-sm">
         <img src={logoIcon} alt="KunciGaji Logo" className="w-9 h-9 rounded-xl shadow-sm" />
-        KunciGaji <span className='bg-orange-500 text-white inline-block px-2 py-1 rounded-full text-sm'>Closed Testing</span>
+        KunciGaji
       </a>
       <nav className="hidden md:block">
         <a
-          href="https://groups.google.com/g/kuncigaji-testers"
+          href="https://play.google.com/store/apps/details?id=com.dennisthandy.kuncigaji"
           className="inline-flex items-center justify-center gap-2 py-2.5 px-6 rounded-full font-semibold text-white bg-pink-500 hover:bg-pink-600 shadow-[0_4px_14px_rgba(236,72,153,0.4)] hover:-translate-y-0.5 hover:shadow-[0_6px_20px_rgba(236,72,153,0.5)] transition-all"
         >
           <img src={playIcon} alt="Play" className="w-4 h-4" />
@@ -93,7 +93,7 @@ const Header = () => (
 
 const Hero = () => {
   return (
-    <section className="relative pt-44 pb-32 px-6 bg-[radial-gradient(120%_120%_at_50%_0%,#FCE7F3_0%,#F1F5F9_60%)] flex flex-col items-center overflow-hidden">
+    <section className="relative pt-16 md:pt-44 pb-32 px-6 bg-[radial-gradient(120%_120%_at_50%_0%,#FCE7F3_0%,#F1F5F9_60%)] flex flex-col items-center overflow-hidden">
       <div className="max-w-5xl mx-auto text-center z-10 w-full">
         <FadeIn>
           <h1 className="text-5xl md:text-7xl lg:text-[5rem] font-extrabold tracking-tight text-slate-900 leading-[1.1] mb-6 drop-shadow-sm">
@@ -103,7 +103,7 @@ const Hero = () => {
             30 menit pertama setelah gajian menentukan kondisi finansialmu bulan ini.
           </p>
           <a
-            href="https://groups.google.com/g/kuncigaji-testers"
+            href="https://play.google.com/store/apps/details?id=com.dennisthandy.kuncigaji"
             className="inline-flex items-center gap-3 py-4 px-8 rounded-full font-bold text-lg text-white bg-pink-500 hover:bg-pink-600 shadow-[0_8px_20px_-6px_rgba(236,72,153,0.5)] hover:-translate-y-1 hover:shadow-[0_12px_25px_-5px_rgba(236,72,153,0.6)] transition-all"
           >
             <img src={playIcon} alt="Google Play" className="w-6 h-6" />
@@ -371,7 +371,7 @@ const FinalCta = () => (
           Ubah kondisimu mulai hari ini. Bangun sistem otomatis yang menenangkan pikiran.
         </p>
         <a
-          href="https://groups.google.com/g/kuncigaji-testers"
+          href="https://play.google.com/store/apps/details?id=com.dennisthandy.kuncigaji"
           className="flex items-center justify-center gap-3 w-full max-w-md mx-auto py-5 px-8 rounded-full font-bold text-xl md:text-2xl text-white bg-pink-500 hover:bg-pink-600 shadow-[0_8px_25px_-4px_rgba(236,72,153,0.5)] hover:-translate-y-1.5 hover:shadow-[0_15px_30px_-5px_rgba(236,72,153,0.6)] transition-all active:scale-95"
         >
           <img src={playIcon} alt="Play" className="w-6 h-6 opacity-90" />
@@ -385,7 +385,7 @@ const FinalCta = () => (
 const Footer = () => (
   <footer className="bg-slate-50 py-16 text-center border-t border-slate-200 pb-28 md:pb-16">
     <div className="max-w-4xl mx-auto px-6">
-      <a href="https://groups.google.com/g/kuncigaji-testers" className="flex justify-center items-center gap-2 text-xl font-bold tracking-tight text-slate-900 mb-8 opacity-60 hover:opacity-100 transition-opacity">
+      <a href="https://play.google.com/store/apps/details?id=com.dennisthandy.kuncigaji" className="flex justify-center items-center gap-2 text-xl font-bold tracking-tight text-slate-900 mb-8 opacity-60 hover:opacity-100 transition-opacity">
         <img src={logoIcon} alt="KunciGaji Logo" className="w-12 h-12 grayscale opacity-80" />
         KunciGaji
       </a>
@@ -456,8 +456,8 @@ function App() {
 
   return (
     <div className="relative min-h-screen bg-slate-50 font-sans selection:bg-pink-500 selection:text-white">
-      <div className='text-center sticky top-0 z-[99999] bg-orange-500 py-4'>
-        <p className='text-white'>Bantu KunciGaji menjadi lebih baik dengan mengikuti Closed Testing di Google Play Store. <a href="https://groups.google.com/g/kuncigaji-testers" className='text-white underline'>Menjadi Penguji</a></p>
+      <div className='text-center sticky top-0 z-[99999] bg-orange-500 py-4 hidden'>
+        <p className='text-white'>Bantu KunciGaji menjadi lebih baik dengan mengikuti Closed Testing di Google Play Store. <a href="https://play.google.com/store/apps/details?id=com.dennisthandy.kuncigaji" className='text-white underline'>Menjadi Penguji</a></p>
 
       </div>
       <Header />
