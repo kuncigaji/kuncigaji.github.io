@@ -18,6 +18,9 @@ import imgDashboard from './assets/apps/dashboard.jpg';
 import imgPerformance from './assets/apps/performance.jpg';
 import imgScore from './assets/apps/score.jpg';
 import imgSetting from './assets/apps/setting.jpg';
+import img1 from './assets/apps/1.png'
+import img2 from './assets/apps/2.png'
+import img3 from './assets/apps/3.png'
 import playIcon from './assets/google-play-icon.svg';
 import heroImage from './assets/hero.png';
 import logoIcon from './assets/icon.png';
@@ -97,7 +100,7 @@ const Hero = () => {
       <div className="max-w-5xl mx-auto text-center z-10 w-full">
         <FadeIn>
           <h1 className="text-5xl md:text-7xl lg:text-[5rem] font-extrabold tracking-tight text-slate-900 leading-[1.1] mb-6 drop-shadow-sm">
-            Gaji Masuk. <br className="hidden md:block" /> Uang Terkontrol.
+            <span className='text-pink-500'>Gaji</span> Masuk. <br className="hidden md:block" /> Uang <span className='text-pink-500'>Terkontrol</span>.
           </h1>
           <p className="text-lg md:text-xl text-slate-500 max-w-2xl mx-auto mb-10 leading-relaxed">
             30 menit pertama setelah gajian menentukan kondisi finansialmu bulan ini.
@@ -134,7 +137,7 @@ const Problem = () => (
           <AlertCircle size={36} strokeWidth={1.5} />
         </div>
         <h2 className="text-3xl md:text-5xl font-extrabold text-slate-900 mb-8 tracking-tight drop-shadow-sm">
-          Masalahnya <span className='text-pink-500'>Bukan</span> di Gaji
+          Masalahnya Bukan di <span className='text-pink-500'>Gaji</span>
         </h2>
         <p className="text-lg md:text-xl text-slate-500 leading-relaxed max-w-2xl mx-auto">
           Gaji seringkali sekadar "numpang lewat". Bukan karena penghasilanmu kurang,
@@ -187,7 +190,7 @@ const HowItWorks = () => {
       <div className="max-w-6xl mx-auto">
         <FadeIn className="text-center mb-16">
           <h2 className="text-3xl md:text-4xl font-extrabold text-slate-900 mb-4 tracking-tight drop-shadow-sm">
-            Cara Kerja dalam 3 Langkah
+            Cara Kerja dalam <span className='text-pink-500'>3 Langkah</span>
           </h2>
           <p className="text-lg text-slate-500 max-w-xl mx-auto">
             Ritual sederhana yang kamu lakukan setiap setelah gajian.
@@ -227,7 +230,7 @@ const Features = () => {
         <div className="lg:col-span-5">
           <FadeIn className="mb-12 text-center lg:text-left">
             <h2 className="text-3xl md:text-4xl font-extrabold text-slate-900 mb-6 tracking-tight leading-tight drop-shadow-sm">
-              Sistem yang Menjaga Uangmu Tetap Terkontrol
+              Sistem yang <span className='text-pink-500'>Menjaga</span> Uangmu Tetap <span className='text-pink-500'>Terkontrol</span>
             </h2>
             <p className="text-lg text-slate-500">
               Dari gajian sampai akhir bulan, semuanya sudah punya arah.
@@ -258,27 +261,27 @@ const Features = () => {
           {/* Left Finger */}
           <FadeIn delay={100} className="absolute left-2 xl:left-8 top-20 z-10 w-64 -rotate-12 hover:z-40 hover:-translate-y-6 hover:-rotate-3 transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)]">
             <img
-              src={imgPerformance}
+              src={img3}
               alt="Performance KunciGaji"
-              className="rounded-[2.5rem] border-[8px] border-white shadow-[0_20px_50px_rgba(0,0,0,0.15)] w-full block bg-white opacity-95 hover:opacity-100"
+              className="rounded-[2.5rem] border-4 border-white shadow-[0_20px_50px_rgba(0,0,0,0.15)] w-full block bg-white opacity-95 hover:opacity-100"
             />
           </FadeIn>
 
           {/* Right Finger */}
           <FadeIn delay={400} className="absolute right-2 xl:right-8 top-20 z-20 w-64 rotate-12 hover:z-40 hover:-translate-y-6 hover:rotate-3 transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)]">
             <img
-              src={imgSetting}
+              src={img2}
               alt="Settings KunciGaji"
-              className="rounded-[2.5rem] border-[8px] border-white shadow-[0_20px_50px_rgba(0,0,0,0.15)] w-full block bg-white opacity-95 hover:opacity-100"
+              className="rounded-[2.5rem] border-4 border-white shadow-[0_20px_50px_rgba(0,0,0,0.15)] w-full block bg-white opacity-95 hover:opacity-100"
             />
           </FadeIn>
 
           {/* Center Finger (Highest) */}
           <FadeIn delay={200} className="absolute left-1/2 -translate-x-1/2 top-0 z-30 w-64 hover:-translate-y-6 transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)]">
             <img
-              src={imgDashboard}
+              src={img1}
               alt="Dashboard KunciGaji"
-              className="rounded-[2.5rem] border-[8px] border-white shadow-[0_30px_60px_rgba(0,0,0,0.2)] w-full block bg-white"
+              className="rounded-[2.5rem] border-4 border-white shadow-[0_30px_60px_rgba(0,0,0,0.2)] w-full block bg-white"
             />
           </FadeIn>
         </div>
