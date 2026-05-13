@@ -14,10 +14,8 @@ import {
 import React, { useEffect, useRef, useState } from 'react';
 
 // Asset Imports
-import imgDashboard from './assets/apps/dashboard.jpg';
 import imgPerformance from './assets/apps/performance.jpg';
 import imgScore from './assets/apps/score.jpg';
-import imgSetting from './assets/apps/setting.jpg';
 import img1 from './assets/apps/1.png'
 import img2 from './assets/apps/2.png'
 import img3 from './assets/apps/3.png'
