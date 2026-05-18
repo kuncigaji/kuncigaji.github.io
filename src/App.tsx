@@ -23,6 +23,104 @@ import playIcon from './assets/google-play-icon.svg';
 import heroImage from './assets/hero.png';
 import logoIcon from './assets/icon.png';
 
+// Translations
+import { translations } from './translations';
+import type { Language } from './translations';
+
+// --- Language Context & Provider ---
+interface LanguageContextType {
+  language: Language;
+  setLanguage: (lang: Language) => void;
+  t: typeof translations['id'];
+}
+
+const LanguageContext = React.createContext<LanguageContextType | undefined>(undefined);
+
+export const LanguageProvider = ({ children }: { children: React.ReactNode }) => {
+  const [language, setLanguageState] = useState<Language>(() => {
+    const saved = localStorage.getItem('kuncigaji_lang');
+    if (saved === 'id' || saved === 'en') return saved;
+    const navLang = navigator.language.toLowerCase();
+    return navLang.startsWith('id') ? 'id' : 'en';
+  });
+
+  const setLanguage = (lang: Language) => {
+    setLanguageState(lang);
+    localStorage.setItem('kuncigaji_lang', lang);
+  };
+
+  const t = translations[language];
+
+  useEffect(() => {
+    document.documentElement.lang = language;
+    document.title = t.seoTitle;
+    
+    const metaDescription = document.querySelector('meta[name="description"]');
+    if (metaDescription) {
+      metaDescription.setAttribute('content', t.seoDescription);
+    }
+    
+    const ogTitle = document.querySelector('meta[property="og:title"]');
+    if (ogTitle) ogTitle.setAttribute('content', t.seoTitle);
+    
+    const ogDesc = document.querySelector('meta[property="og:description"]');
+    if (ogDesc) ogDesc.setAttribute('content', t.seoDescription);
+
+    const twTitle = document.querySelector('meta[name="twitter:title"]');
+    if (twTitle) twTitle.setAttribute('content', t.seoTitle);
+
+    const twDesc = document.querySelector('meta[name="twitter:description"]');
+    if (twDesc) twDesc.setAttribute('content', t.seoDescription);
+  }, [language, t]);
+
+  return (
+    <LanguageContext.Provider value={{ language, setLanguage, t }}>
+      {children}
+    </LanguageContext.Provider>
+  );
+};
+
+export const useLanguage = () => {
+  const context = React.useContext(LanguageContext);
+  if (!context) {
+    throw new Error('useLanguage must be used within a LanguageProvider');
+  }
+  return context;
+};
+
+// --- Language Switcher Component ---
+const LanguageSwitcher = () => {
+  const { language, setLanguage } = useLanguage();
+
+  return (
+    <div className="flex bg-slate-100/80 backdrop-blur-sm p-1 rounded-full border border-slate-200/50 shadow-sm transition-all duration-300 hover:border-slate-300">
+      <button
+        onClick={() => setLanguage('id')}
+        className={`relative px-3 py-1.5 text-xs font-bold rounded-full transition-all duration-300 flex items-center gap-1 select-none cursor-pointer ${
+          language === 'id'
+            ? 'bg-white text-pink-500 shadow-[0_2px_8px_rgba(236,72,153,0.15)] scale-100'
+            : 'text-slate-500 hover:text-slate-800'
+        }`}
+      >
+        <span>🇮🇩</span>
+        <span>ID</span>
+      </button>
+      <button
+        onClick={() => setLanguage('en')}
+        className={`relative px-3 py-1.5 text-xs font-bold rounded-full transition-all duration-300 flex items-center gap-1 select-none cursor-pointer ${
+          language === 'en'
+            ? 'bg-white text-pink-500 shadow-[0_2px_8px_rgba(236,72,153,0.15)] scale-100'
+            : 'text-slate-500 hover:text-slate-800'
+        }`}
+      >
+        <span>🇬🇧</span>
+        <span>EN</span>
+      </button>
+    </div>
+  );
+};
+
+
 
 // --- Reusable Fade-In Animation Component ---
 const FadeIn = ({ children, className = "", delay = 0 }: { children: React.ReactNode, className?: string, delay?: number }) => {
@@ -58,57 +156,68 @@ const FadeIn = ({ children, className = "", delay = 0 }: { children: React.React
 };
 
 // --- Mobile CTA Sticky component ---
-const MobileStickyCTA = () => (
-  <div className="md:hidden fixed bottom-0 left-0 right-0 p-4 bg-white/90 backdrop-blur-md border-t border-slate-200 z-50 shadow-[0_-10px_20px_rgba(0,0,0,0.03)]">
-    <a
-      href="https://play.google.com/store/apps/details?id=com.dennisthandy.kuncigaji"
-      className="flex w-full items-center justify-center gap-3 py-3 px-6 rounded-full font-bold text-white bg-pink-500 shadow-[0_8px_20px_-6px_rgba(236,72,153,0.5)] active:scale-95 transition-all"
-    >
-      <img src={playIcon} alt="Play" className="w-5 h-5" />
-      Mulai Sekarang
-    </a>
-  </div>
-);
+const MobileStickyCTA = () => {
+  const { t } = useLanguage();
+  return (
+    <div className="md:hidden fixed bottom-0 left-0 right-0 p-4 bg-white/90 backdrop-blur-md border-t border-slate-200 z-50 shadow-[0_-10px_20px_rgba(0,0,0,0.03)] pb-safe-bottom">
+      <a
+        href="https://play.google.com/store/apps/details?id=com.dennisthandy.kuncigaji"
+        className="flex w-full items-center justify-center gap-3 py-3 px-6 rounded-full font-bold text-white bg-pink-500 shadow-[0_8px_20px_-6px_rgba(236,72,153,0.5)] active:scale-95 transition-all"
+      >
+        <img src={playIcon} alt="Play" className="w-5 h-5" />
+        {t.ctaStartNow}
+      </a>
+    </div>
+  );
+};
+
 
 // --- Sections ---
 
-const Header = () => (
-  <header className="md:fixed bg-white w-full py-6 z-50 px-6">
-    <div className="max-w-6xl mx-auto flex justify-between items-center">
-      <a href="#" className="flex items-center gap-3 text-2xl font-extrabold tracking-tight text-slate-900 drop-shadow-sm">
-        <img src={logoIcon} alt="KunciGaji Logo" className="w-9 h-9 rounded-xl shadow-sm" />
-        KunciGaji
-      </a>
-      <nav className="hidden md:block">
-        <a
-          href="https://play.google.com/store/apps/details?id=com.dennisthandy.kuncigaji"
-          className="inline-flex items-center justify-center gap-2 py-2.5 px-6 rounded-full font-semibold text-white bg-pink-500 hover:bg-pink-600 shadow-[0_4px_14px_rgba(236,72,153,0.4)] hover:-translate-y-0.5 hover:shadow-[0_6px_20px_rgba(236,72,153,0.5)] transition-all"
-        >
-          <img src={playIcon} alt="Play" className="w-4 h-4" />
-          Mulai Sekarang
+const Header = () => {
+  const { t } = useLanguage();
+  return (
+    <header className="md:fixed bg-white w-full py-6 z-50 px-6 border-b border-slate-100 md:border-b-0">
+      <div className="max-w-6xl mx-auto flex justify-between items-center">
+        <a href="#" className="flex items-center gap-3 text-2xl font-extrabold tracking-tight text-slate-900 drop-shadow-sm">
+          <img src={logoIcon} alt="KunciGaji Logo" className="w-9 h-9 rounded-xl shadow-sm" />
+          KunciGaji
         </a>
-      </nav>
-    </div>
-  </header>
-);
+        <div className="flex items-center gap-4">
+          <LanguageSwitcher />
+          <nav className="hidden md:block">
+            <a
+              href="https://play.google.com/store/apps/details?id=com.dennisthandy.kuncigaji"
+              className="inline-flex items-center justify-center gap-2 py-2.5 px-6 rounded-full font-semibold text-white bg-pink-500 hover:bg-pink-600 shadow-[0_4px_14px_rgba(236,72,153,0.4)] hover:-translate-y-0.5 hover:shadow-[0_6px_20px_rgba(236,72,153,0.5)] transition-all"
+            >
+              <img src={playIcon} alt="Play" className="w-4 h-4" />
+              {t.ctaStartNow}
+            </a>
+          </nav>
+        </div>
+      </div>
+    </header>
+  );
+};
 
 const Hero = () => {
+  const { t } = useLanguage();
   return (
     <section className="relative pt-16 md:pt-44 pb-32 px-6 bg-[radial-gradient(120%_120%_at_50%_0%,#FCE7F3_0%,#F1F5F9_60%)] flex flex-col items-center overflow-hidden">
       <div className="max-w-5xl mx-auto text-center z-10 w-full">
         <FadeIn>
           <h1 className="text-5xl md:text-7xl lg:text-[5rem] font-extrabold tracking-tight text-slate-900 leading-[1.1] mb-6 drop-shadow-sm">
-            <span className='text-pink-500'>Gaji</span> Masuk. <br className="hidden md:block" /> Uang <span className='text-pink-500'>Terkontrol</span>.
+            <span className='text-pink-500'>{t.heroTitle1}</span>{t.heroTitle2}<br className="hidden md:block" /> <span className='text-pink-500'>{t.heroTitle3}</span>
           </h1>
           <p className="text-lg md:text-xl text-slate-500 max-w-2xl mx-auto mb-10 leading-relaxed">
-            30 menit pertama setelah gajian menentukan kondisi finansialmu bulan ini.
+            {t.heroSubtitle}
           </p>
           <a
             href="https://play.google.com/store/apps/details?id=com.dennisthandy.kuncigaji"
             className="inline-flex items-center gap-3 py-4 px-8 rounded-full font-bold text-lg text-white bg-pink-500 hover:bg-pink-600 shadow-[0_8px_20px_-6px_rgba(236,72,153,0.5)] hover:-translate-y-1 hover:shadow-[0_12px_25px_-5px_rgba(236,72,153,0.6)] transition-all"
           >
             <img src={playIcon} alt="Google Play" className="w-6 h-6" />
-            <span>Mulai Sekarang</span>
+            <span>{t.ctaStartNow}</span>
           </a>
         </FadeIn>
 
@@ -127,59 +236,63 @@ const Hero = () => {
   );
 };
 
-const Problem = () => (
-  <section className="py-24 px-6 text-center">
-    <div className="max-w-3xl mx-auto">
-      <FadeIn>
-        <div className="w-16 h-16 hidden rounded-2xl mx-auto flex items-center justify-center text-slate-500 mb-6 bg-slate-100">
-          <AlertCircle size={36} strokeWidth={1.5} />
-        </div>
-        <h2 className="text-3xl md:text-5xl font-extrabold text-slate-900 mb-8 tracking-tight drop-shadow-sm">
-          Masalahnya Bukan di <span className='text-pink-500'>Gaji</span>
-        </h2>
-        <p className="text-lg md:text-xl text-slate-500 leading-relaxed max-w-2xl mx-auto">
-          Gaji seringkali sekadar "numpang lewat". Bukan karena penghasilanmu kurang,
-          tapi karena kamu tidak punya sistem otomatis yang membagi kemana uang itu harus pergi.
-          Penyakit utama kita adalah menabung dari sisa, bukan menyisihkan di awal.
-        </p>
-      </FadeIn>
-    </div>
-  </section>
-);
+const Problem = () => {
+  const { t } = useLanguage();
+  return (
+    <section className="py-24 px-6 text-center">
+      <div className="max-w-3xl mx-auto">
+        <FadeIn>
+          <div className="w-16 h-16 hidden rounded-2xl mx-auto flex items-center justify-center text-slate-500 mb-6 bg-slate-100">
+            <AlertCircle size={36} strokeWidth={1.5} />
+          </div>
+          <h2 className="text-3xl md:text-5xl font-extrabold text-slate-900 mb-8 tracking-tight drop-shadow-sm">
+            {t.problemTitle}<span className='text-pink-500'>{t.problemTitleHighlight}</span>
+          </h2>
+          <p className="text-lg md:text-xl text-slate-500 leading-relaxed max-w-2xl mx-auto">
+            {t.problemDesc}
+          </p>
+        </FadeIn>
+      </div>
+    </section>
+  );
+};
 
-const Solution = () => (
-  <section className="py-24 px-6 text-center bg-white border-y border-slate-100 shadow-[0_4px_20px_rgba(0,0,0,0.02)]">
-    <div className="max-w-3xl mx-auto">
-      <FadeIn>
-        <h2 className="text-3xl md:text-5xl font-extrabold text-slate-900 mb-6 tracking-tight drop-shadow-sm">
-          Bukan Nambah Gaji. <br />Tapi <span className='text-pink-500'>Sistem</span>.
-        </h2>
-        <p className="text-lg md:text-xl text-slate-500 leading-relaxed max-w-2xl mx-auto">
-          KunciGaji membantu kamu membangun sistem personal yang tenang.
-          Begitu notifikasi transfer gaji masuk, kamu sudah tahu apa yang harus dilakukan.
-          Tidak ada lagi rasa bersalah atau kecemasan di akhir bulan.
-        </p>
-      </FadeIn>
-    </div>
-  </section>
-);
+const Solution = () => {
+  const { t } = useLanguage();
+  return (
+    <section className="py-24 px-6 text-center bg-white border-y border-slate-100 shadow-[0_4px_20px_rgba(0,0,0,0.02)]">
+      <div className="max-w-3xl mx-auto">
+        <FadeIn>
+          <h2 className="text-3xl md:text-5xl font-extrabold text-slate-900 mb-6 tracking-tight drop-shadow-sm">
+            {t.solutionTitle1}<br /><span className='text-pink-500'>{t.solutionTitleHighlight}</span>
+          </h2>
+          <p className="text-lg md:text-xl text-slate-500 leading-relaxed max-w-2xl mx-auto">
+            {t.solutionDesc}
+          </p>
+        </FadeIn>
+      </div>
+    </section>
+  );
+};
 
 const HowItWorks = () => {
+  const { t } = useLanguage();
+  
   const steps = [
     {
       icon: <Download size={28} />,
-      title: "1. Catat Gaji",
-      desc: "Masukkan total pemasukan begitu gaji masuk. Mulai dari angka nyata, bukan asumsi."
+      title: t.step1Title,
+      desc: t.step1Desc
     },
     {
       icon: <PieChart size={28} />,
-      title: "2. Bagi & Kunci",
-      desc: "Bagi uang ke kebutuhan, masa depan, dan kesenangan — lalu kunci di 30 menit pertama."
+      title: t.step2Title,
+      desc: t.step2Desc
     },
     {
       icon: <Smile size={28} />,
-      title: "3. Nikmati Tanpa Beban",
-      desc: "Sisa uang adalah “guilt-free money”. Gunakan tanpa rasa khawatir."
+      title: t.step3Title,
+      desc: t.step3Desc
     }
   ];
 
@@ -188,10 +301,10 @@ const HowItWorks = () => {
       <div className="max-w-6xl mx-auto">
         <FadeIn className="text-center mb-16">
           <h2 className="text-3xl md:text-4xl font-extrabold text-slate-900 mb-4 tracking-tight drop-shadow-sm">
-            Cara Kerja dalam <span className='text-pink-500'>3 Langkah</span>
+            {t.howItWorksTitle}<span className='text-pink-500'>{t.howItWorksTitleHighlight}</span>
           </h2>
           <p className="text-lg text-slate-500 max-w-xl mx-auto">
-            Ritual sederhana yang kamu lakukan setiap setelah gajian.
+            {t.howItWorksSubtitle}
           </p>
         </FadeIn>
 
@@ -214,11 +327,13 @@ const HowItWorks = () => {
 };
 
 const Features = () => {
+  const { t } = useLanguage();
+  
   const fts = [
-    { icon: <Briefcase size={28} className="text-pink-500" />, title: "Semua Uang Punya Tujuan", desc: "Tidak ada lagi uang “hilang” tanpa arah." },
-    { icon: <Compass size={28} className="text-pink-500" />, title: "Prioritas Jadi Jelas", desc: "Kamu tahu mana yang harus didahulukan, tanpa mikir berulang." },
-    { icon: <Bell size={28} className="text-pink-500" />, title: "Tidak Pernah Telat Bayar", desc: "Semua sudah diingatkan sebelum jadi masalah." },
-    { icon: <TrendingUp size={28} className="text-pink-500" />, title: "Lihat Perubahan Nyata", desc: "Kamu bisa melihat progres dari bulan ke bulan." },
+    { icon: <Briefcase size={28} className="text-pink-500" />, title: t.feature1Title, desc: t.feature1Desc },
+    { icon: <Compass size={28} className="text-pink-500" />, title: t.feature2Title, desc: t.feature2Desc },
+    { icon: <Bell size={28} className="text-pink-500" />, title: t.feature3Title, desc: t.feature3Desc },
+    { icon: <TrendingUp size={28} className="text-pink-500" />, title: t.feature4Title, desc: t.feature4Desc },
   ];
 
   return (
@@ -228,10 +343,10 @@ const Features = () => {
         <div className="lg:col-span-5">
           <FadeIn className="mb-12 text-center lg:text-left">
             <h2 className="text-3xl md:text-4xl font-extrabold text-slate-900 mb-6 tracking-tight leading-tight drop-shadow-sm">
-              Sistem yang <span className='text-pink-500'>Menjaga</span> Uangmu Tetap <span className='text-pink-500'>Terkontrol</span>
+              {t.featuresTitle1}<span className='text-pink-500'>{t.featuresTitleHighlight1}</span>{t.featuresTitle2}<span className='text-pink-500'>{t.featuresTitleHighlight2}</span>
             </h2>
             <p className="text-lg text-slate-500">
-              Dari gajian sampai akhir bulan, semuanya sudah punya arah.
+              {t.featuresSubtitle}
             </p>
           </FadeIn>
 
@@ -287,119 +402,132 @@ const Features = () => {
     </section>
   );
 };
-const PremiumSection = () => (
-  <section className="py-32 px-6 bg-slate-100 text-center hidden">
-    <div className="max-w-5xl mx-auto">
-      <FadeIn className="mb-16">
-        <h2 className="text-3xl md:text-5xl font-extrabold text-slate-900 mb-6 tracking-tight drop-shadow-sm">
-          Insight Lebih Dalam
-        </h2>
-        <p className="text-lg text-slate-500 max-w-xl mx-auto">
-          Dapatkan analisis spesifik untuk kebiasaan belanja dan masa depan finansialmu menggunakan algoritma canggih.
-        </p>
-      </FadeIn>
+const PremiumSection = () => {
+  const { t } = useLanguage();
+  return (
+    <section className="py-32 px-6 bg-slate-100 text-center hidden">
+      <div className="max-w-5xl mx-auto">
+        <FadeIn className="mb-16">
+          <h2 className="text-3xl md:text-5xl font-extrabold text-slate-900 mb-6 tracking-tight drop-shadow-sm">
+            {t.premiumTitle}
+          </h2>
+          <p className="text-lg text-slate-500 max-w-xl mx-auto">
+            {t.premiumSubtitle}
+          </p>
+        </FadeIn>
 
-      <FadeIn delay={200}>
-        <div className="relative rounded-[2.5rem] overflow-hidden bg-white shadow-md border border-slate-200/60 max-w-4xl mx-auto">
+        <FadeIn delay={200}>
+          <div className="relative rounded-[2.5rem] overflow-hidden bg-white shadow-md border border-slate-200/60 max-w-4xl mx-auto">
 
-          {/* Locked App Previews Background */}
-          <div className="grid sm:grid-cols-2 gap-8 p-8 md:p-12 blur-[10px] opacity-60 pointer-events-none select-none">
-            <img
-              src={imgPerformance}
-              alt="Performance Feature"
-              className="w-full rounded-[2rem] shadow-sm transform -rotate-2 scale-105"
-            />
-            <img
-              src={imgScore}
-              alt="Score Feature"
-              className="w-full rounded-[2rem] shadow-sm transform translate-y-12 rotate-2 scale-105"
-            />
-          </div>
-
-          {/* Overlay Content */}
-          <div className="absolute inset-0 bg-gradient-to-t from-pink-50/95 via-white/80 to-white/30 flex flex-col items-center justify-center p-8 z-10 backdrop-blur-[2px]">
-            <div className="bg-pink-100 p-4 rounded-full mb-6 text-pink-500 shadow-sm animate-bounce">
-              <Lock size={32} />
+            {/* Locked App Previews Background */}
+            <div className="grid sm:grid-cols-2 gap-8 p-8 md:p-12 blur-[10px] opacity-60 pointer-events-none select-none">
+              <img
+                src={imgPerformance}
+                alt="Performance Feature"
+                className="w-full rounded-[2rem] shadow-sm transform -rotate-2 scale-105"
+              />
+              <img
+                src={imgScore}
+                alt="Score Feature"
+                className="w-full rounded-[2rem] shadow-sm transform translate-y-12 rotate-2 scale-105"
+              />
             </div>
-            <h3 className="text-3xl md:text-4xl font-extrabold text-slate-900 mb-8 drop-shadow-sm tracking-tight text-center">
-              Unlock Fitur Premium
-            </h3>
-            <button className="py-4 px-10 rounded-full font-bold text-lg text-white bg-slate-900 hover:bg-black shadow-lg transition-all hover:scale-105 active:scale-95 flex items-center gap-2">
-              Lihat Paket Premium <ArrowRight size={20} />
-            </button>
-            <p className="mt-6 text-sm font-semibold text-slate-500 max-w-xs text-center">
-              Hanya Rp15.000 / Bulan. Batalkan Kapan Saja.
-            </p>
+
+            {/* Overlay Content */}
+            <div className="absolute inset-0 bg-gradient-to-t from-pink-50/95 via-white/80 to-white/30 flex flex-col items-center justify-center p-8 z-10 backdrop-blur-[2px]">
+              <div className="bg-pink-100 p-4 rounded-full mb-6 text-pink-500 shadow-sm animate-bounce">
+                <Lock size={32} />
+              </div>
+              <h3 className="text-3xl md:text-4xl font-extrabold text-slate-900 mb-8 drop-shadow-sm tracking-tight text-center">
+                {t.premiumUnlockTitle}
+              </h3>
+              <button className="py-4 px-10 rounded-full font-bold text-lg text-white bg-slate-900 hover:bg-black shadow-lg transition-all hover:scale-105 active:scale-95 flex items-center gap-2">
+                {t.premiumCta} <ArrowRight size={20} />
+              </button>
+              <p className="mt-6 text-sm font-semibold text-slate-500 max-w-xs text-center">
+                {t.premiumPrice}
+              </p>
+            </div>
+
           </div>
-
-        </div>
-      </FadeIn>
-    </div>
-  </section>
-);
-
-const EmotionalSection = () => (
-  <section className="py-32 px-6 bg-pink-50 text-center relative overflow-hidden">
-    {/* Decorative blur elements */}
-    <div className="absolute top-0 right-0 w-96 h-96 bg-white/40 blur-[80px] rounded-full pointer-events-none -z-10" />
-    <div className="absolute bottom-0 left-0 w-96 h-96 bg-pink-500/10 blur-[100px] rounded-full pointer-events-none -z-10" />
-
-    <div className="max-w-3xl mx-auto z-10">
-      <FadeIn>
-        <div className="w-24 h-24 bg-white/80 backdrop-blur-sm shadow-sm rounded-[2rem] mx-auto flex items-center justify-center mb-10 transform -rotate-6 hover:rotate-0 transition-transform duration-500 border border-pink-100">
-          <Heart className="text-pink-500 fill-pink-500/20" size={48} strokeWidth={1.5} />
-        </div>
-        <h2 className="text-4xl md:text-6xl font-extrabold text-slate-900 mb-8 tracking-tight drop-shadow-sm">
-          Bukan soal uang. <br className="hidden sm:block" /> Tapi <span className="text-pink-500">kebiasaan.</span>
-        </h2>
-        <p className="text-xl md:text-2xl text-slate-600 leading-relaxed font-medium">
-          KunciGaji tidak dibuat untuk merantai kamu dari kesenangan hidup.
-          Aplikasi ini dibangun agar kamu bisa tidur nyenyak di malam hari, yakin bahwa tagihan bulan depan sudah terurus.
-        </p>
-      </FadeIn>
-    </div>
-  </section>
-);
-
-const FinalCta = () => (
-  <section id="mulai" className="py-40 px-6 bg-white text-center">
-    <div className="max-w-3xl mx-auto">
-      <FadeIn>
-        <h2 className="text-4xl md:text-6xl font-extrabold text-slate-900 mb-8 tracking-tight leading-tight drop-shadow-sm">
-          Mulai dari gajian berikutnya
-        </h2>
-        <p className="text-xl text-slate-500 mb-12 max-w-lg mx-auto leading-relaxed">
-          Ubah kondisimu mulai hari ini. Bangun sistem otomatis yang menenangkan pikiran.
-        </p>
-        <a
-          href="https://play.google.com/store/apps/details?id=com.dennisthandy.kuncigaji"
-          className="flex items-center justify-center gap-3 w-full max-w-md mx-auto py-5 px-8 rounded-full font-bold text-xl md:text-2xl text-white bg-pink-500 hover:bg-pink-600 shadow-[0_8px_25px_-4px_rgba(236,72,153,0.5)] hover:-translate-y-1.5 hover:shadow-[0_15px_30px_-5px_rgba(236,72,153,0.6)] transition-all active:scale-95"
-        >
-          <img src={playIcon} alt="Play" className="w-6 h-6 opacity-90" />
-          <span>Mulai Gunakan Sistem</span>
-        </a>
-      </FadeIn>
-    </div>
-  </section>
-);
-
-const Footer = () => (
-  <footer className="bg-slate-50 py-16 text-center border-t border-slate-200 pb-28 md:pb-16">
-    <div className="max-w-4xl mx-auto px-6">
-      <a href="https://play.google.com/store/apps/details?id=com.dennisthandy.kuncigaji" className="flex justify-center items-center gap-2 text-xl font-bold tracking-tight text-slate-900 mb-8 opacity-60 hover:opacity-100 transition-opacity">
-        <img src={logoIcon} alt="KunciGaji Logo" className="w-12 h-12 grayscale opacity-80" />
-        KunciGaji
-      </a>
-      <p className="text-slate-400 font-medium">&copy; 2026 KunciGaji App. All rights reserved.</p>
-      <div className="mt-4">
-        <a href="#privacy-policy" className="text-sm font-medium text-slate-400 hover:text-pink-500 transition-colors">Kebijakan Privasi</a>
+        </FadeIn>
       </div>
-    </div>
-  </footer>
-);
+    </section>
+  );
+};
+
+const EmotionalSection = () => {
+  const { t } = useLanguage();
+  return (
+    <section className="py-32 px-6 bg-pink-50 text-center relative overflow-hidden">
+      {/* Decorative blur elements */}
+      <div className="absolute top-0 right-0 w-96 h-96 bg-white/40 blur-[80px] rounded-full pointer-events-none -z-10" />
+      <div className="absolute bottom-0 left-0 w-96 h-96 bg-pink-500/10 blur-[100px] rounded-full pointer-events-none -z-10" />
+
+      <div className="max-w-3xl mx-auto z-10">
+        <FadeIn>
+          <div className="w-24 h-24 bg-white/80 backdrop-blur-sm shadow-sm rounded-[2rem] mx-auto flex items-center justify-center mb-10 transform -rotate-6 hover:rotate-0 transition-transform duration-500 border border-pink-100">
+            <Heart className="text-pink-500 fill-pink-500/20" size={48} strokeWidth={1.5} />
+          </div>
+          <h2 className="text-4xl md:text-6xl font-extrabold text-slate-900 mb-8 tracking-tight drop-shadow-sm">
+            {t.emotionalTitle1}<br className="hidden sm:block" /> <span className="text-pink-500">{t.emotionalTitleHighlight}</span>
+          </h2>
+          <p className="text-xl md:text-2xl text-slate-600 leading-relaxed font-medium">
+            {t.emotionalDesc}
+          </p>
+        </FadeIn>
+      </div>
+    </section>
+  );
+};
+
+const FinalCta = () => {
+  const { t } = useLanguage();
+  return (
+    <section id="mulai" className="py-40 px-6 bg-white text-center">
+      <div className="max-w-3xl mx-auto">
+        <FadeIn>
+          <h2 className="text-4xl md:text-6xl font-extrabold text-slate-900 mb-8 tracking-tight leading-tight drop-shadow-sm">
+            {t.finalCtaTitle}
+          </h2>
+          <p className="text-xl text-slate-500 mb-12 max-w-lg mx-auto leading-relaxed">
+            {t.finalCtaSubtitle}
+          </p>
+          <a
+            href="https://play.google.com/store/apps/details?id=com.dennisthandy.kuncigaji"
+            className="flex items-center justify-center gap-3 w-full max-w-md mx-auto py-5 px-8 rounded-full font-bold text-xl md:text-2xl text-white bg-pink-500 hover:bg-pink-600 shadow-[0_8px_25px_-4px_rgba(236,72,153,0.5)] hover:-translate-y-1.5 hover:shadow-[0_15px_30px_-5px_rgba(236,72,153,0.6)] transition-all active:scale-95"
+          >
+            <img src={playIcon} alt="Play" className="w-6 h-6 opacity-90" />
+            <span>{t.ctaUseSystem}</span>
+          </a>
+        </FadeIn>
+      </div>
+    </section>
+  );
+};
+
+const Footer = () => {
+  const { t } = useLanguage();
+  return (
+    <footer className="bg-slate-50 py-16 text-center border-t border-slate-200 pb-28 md:pb-16">
+      <div className="max-w-4xl mx-auto px-6">
+        <a href="https://play.google.com/store/apps/details?id=com.dennisthandy.kuncigaji" className="flex justify-center items-center gap-2 text-xl font-bold tracking-tight text-slate-900 mb-8 opacity-60 hover:opacity-100 transition-opacity">
+          <img src={logoIcon} alt="KunciGaji Logo" className="w-12 h-12 grayscale opacity-80" />
+          KunciGaji
+        </a>
+        <p className="text-slate-400 font-medium">{t.footerRights}</p>
+        <div className="mt-4">
+          <a href="#privacy-policy" className="text-sm font-medium text-slate-400 hover:text-pink-500 transition-colors">{t.privacyPolicy}</a>
+        </div>
+      </div>
+    </footer>
+  );
+};
 
 // --- Privacy Policy Page ---
 const PrivacyPolicyPage = () => {
+  const { t } = useLanguage();
+  
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
@@ -413,7 +541,7 @@ const PrivacyPolicyPage = () => {
             KunciGaji
           </a>
           <a href="#" className="text-pink-500 font-semibold hover:underline bg-pink-50 py-2.5 px-6 rounded-full text-sm hover:bg-pink-100 transition-colors">
-            Kembali
+            {t.privacyHeaderBack}
           </a>
         </div>
       </header>
@@ -421,28 +549,114 @@ const PrivacyPolicyPage = () => {
       <main className="flex-grow py-16 px-6">
         <section className="max-w-3xl mx-auto bg-white p-8 md:p-12 rounded-[24px] shadow-sm border border-slate-200">
           <h1 className="text-3xl md:text-4xl font-extrabold tracking-tight text-slate-900 mb-8 pb-6 border-b border-slate-100">
-            Kebijakan Privasi
+            {t.privacyTitle}
           </h1>
           <div className="space-y-6 text-lg text-slate-600 leading-relaxed">
-            <p>Aplikasi ini mengutamakan privasi pengguna.</p>
-            <p>Data finansial yang dimasukkan pengguna disimpan secara lokal di perangkat menggunakan penyimpanan internal aplikasi, dan tidak dikirim ke server mana pun.</p>
-            <p>Untuk fitur tertentu, seperti login dan sinkronisasi akun, aplikasi menggunakan layanan pihak ketiga (Supabase Authentication dengan Google OAuth). Proses ini dapat melibatkan data dasar seperti alamat email dan identitas pengguna yang dikelola secara aman oleh penyedia layanan tersebut.</p>
-            <p>Untuk fitur berlangganan (subscription), aplikasi menggunakan Google Play Billing. Proses transaksi dikelola langsung oleh Google dan dapat melibatkan akun Google pengguna. Aplikasi tidak memiliki akses ke informasi sensitif seperti kata sandi atau detail pembayaran.</p>
-            <p>Aplikasi tidak melakukan pelacakan (tracking) atau menjual data pengguna ke pihak ketiga.</p>
-            <p>Jika pengguna menghapus data melalui fitur Reset Data atau menghapus akun (jika tersedia), data finansial akan dihapus dari perangkat dan data akun yang tersimpan di layanan akan mengikuti kebijakan penyedia layanan terkait.</p>
-            <p className="pt-6 font-bold text-slate-900">Tanggal berlaku: Agustus 2026</p>
+            <p>{t.privacyP1}</p>
+            <p>{t.privacyP2}</p>
+            <p>{t.privacyP3}</p>
+            <p>{t.privacyP4}</p>
+            <p>{t.privacyP5}</p>
+            <p>{t.privacyP6}</p>
+            <p className="pt-6 font-bold text-slate-900">{t.privacyEffectiveDate}</p>
           </div>
         </section>
       </main>
 
       <footer className="bg-slate-50 py-12 text-center border-t border-slate-200 pb-16">
-        <p className="text-slate-400 font-medium">&copy; 2026 KunciGaji App. All rights reserved.</p>
+        <p className="text-slate-400 font-medium">{t.footerRights}</p>
       </footer>
     </div>
   );
 };
 
-function App() {
+// --- Feature Graphic Export Page (1024x500 DOM Container) ---
+const FeatureGraphicExportPage = () => {
+  const { t } = useLanguage();
+
+  const fts = [
+    { icon: <Briefcase size={24} className="text-pink-500" />, title: t.feature1Title, desc: t.feature1Desc },
+    { icon: <Compass size={24} className="text-pink-500" />, title: t.feature2Title, desc: t.feature2Desc },
+    { icon: <Bell size={24} className="text-pink-500" />, title: t.feature3Title, desc: t.feature3Desc },
+    { icon: <TrendingUp size={24} className="text-pink-500" />, title: t.feature4Title, desc: t.feature4Desc },
+  ];
+
+  return (
+    <div id="play-feature-graphic" className="w-[1024px] h-[500px] bg-[radial-gradient(120%_120%_at_50%_0%,#FCE7F3_0%,#F1F5F9_60%)] overflow-hidden relative flex items-center px-12 py-8 font-sans text-slate-900 bg-white">
+      {/* Floating Language Switcher for easy testing inside browser */}
+      <div className="absolute top-4 right-4 z-50">
+        <LanguageSwitcher />
+      </div>
+      
+      <div className="grid grid-cols-12 gap-8 items-center w-full">
+        {/* Left Column: Text & Features List */}
+        <div className="col-span-6 flex flex-col justify-between h-full py-2">
+          <div>
+            <div className="flex items-center gap-2 mb-4">
+              <img src={logoIcon} alt="Logo" className="w-8 h-8 rounded-lg shadow-sm" />
+              <span className="text-xl font-bold tracking-tight">KunciGaji</span>
+            </div>
+            <h2 className="text-3xl font-extrabold text-slate-900 mb-2 tracking-tight leading-tight drop-shadow-sm">
+              {t.featuresTitle1}<span className='text-pink-500'>{t.featuresTitleHighlight1}</span>{t.featuresTitle2}<span className='text-pink-500'>{t.featuresTitleHighlight2}</span>
+            </h2>
+            <p className="text-sm text-slate-500 mb-6">
+              {t.featuresSubtitle}
+            </p>
+          </div>
+
+          <div className="grid grid-cols-2 gap-4">
+            {fts.map((f, i) => (
+              <div key={i} className="flex gap-3 p-3 bg-white/70 backdrop-blur-sm rounded-xl border border-slate-100 items-start">
+                <div className="bg-white p-1.5 rounded-lg shadow-sm text-pink-500 flex-shrink-0">
+                  {React.cloneElement(f.icon, { size: 18 })}
+                </div>
+                <div>
+                  <h4 className="text-xs font-bold text-slate-900 mb-0.5">{f.title}</h4>
+                  <p className="text-[10px] leading-snug text-slate-500">{f.desc}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Right Column: App Screenshots Composition (3-Finger Fan) */}
+        <div className="col-span-6 relative h-[420px] overflow-hidden">
+          <div className="absolute inset-0 bg-pink-100/40 rounded-full blur-[80px] opacity-70"></div>
+
+          {/* Left Finger */}
+          <div className="absolute left-4 top-16 z-10 w-[140px] -rotate-12 transition-all duration-700">
+            <img
+              src={img3}
+              alt="Performance KunciGaji"
+              className="rounded-[1.5rem] border-2 border-white shadow-lg w-full block bg-white opacity-95"
+            />
+          </div>
+
+          {/* Right Finger */}
+          <div className="absolute right-4 top-16 z-20 w-[140px] rotate-12 transition-all duration-700">
+            <img
+              src={img2}
+              alt="Settings KunciGaji"
+              className="rounded-[1.5rem] border-2 border-white shadow-lg w-full block bg-white opacity-95"
+            />
+          </div>
+
+          {/* Center Finger (Highest) */}
+          <div className="absolute left-1/2 -translate-x-1/2 top-4 z-30 w-[145px] transition-all duration-700">
+            <img
+              src={img1}
+              alt="Dashboard KunciGaji"
+              className="rounded-[1.5rem] border-2 border-white shadow-xl w-full block bg-white"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+function AppContent() {
+  const { t } = useLanguage();
   const [hash, setHash] = useState(window.location.hash);
 
   useEffect(() => {
@@ -455,11 +669,16 @@ function App() {
     return <PrivacyPolicyPage />;
   }
 
-  return (
-    <div className="relative min-h-screen bg-slate-50 font-sans selection:bg-pink-500 selection:text-white">
-      <div className='text-center sticky top-0 z-[99999] bg-orange-500 py-4 hidden'>
-        <p className='text-white'>Bantu KunciGaji menjadi lebih baik dengan mengikuti Closed Testing di Google Play Store. <a href="https://play.google.com/store/apps/details?id=com.dennisthandy.kuncigaji" className='text-white underline'>Menjadi Penguji</a></p>
+  if (hash === '#feature-graphic') {
+    return <FeatureGraphicExportPage />;
+  }
 
+  return (
+    <div className="relative min-h-screen bg-slate-50 font-sans selection:bg-pink-500 selection:text-white pb-20 md:pb-0">
+      <div className='text-center sticky top-0 z-[99999] bg-orange-500 py-4 hidden'>
+        <p className='text-white'>
+          {t.bannerTesting} <a href="https://play.google.com/store/apps/details?id=com.dennisthandy.kuncigaji" className='text-white underline'>{t.bannerBecomeTester}</a>
+        </p>
       </div>
       <Header />
       <main>
@@ -475,6 +694,14 @@ function App() {
       <Footer />
       <MobileStickyCTA />
     </div>
+  );
+}
+
+function App() {
+  return (
+    <LanguageProvider>
+      <AppContent />
+    </LanguageProvider>
   );
 }
 
